@@ -27,21 +27,33 @@ class xor_net(object):
 		print("Training w/ " + str(self.n_hidden_lyr) + " Hidden Layers")
 		print("")
 		
+		# NN Params
 		self.weights = []
 		self.biases = []
+		self.lr = 0.05
+
+		# Saved states for backprop
+		self.prev_outs = []
+		self.weighted_sums = []
 
 		# Input layer
 		self.weights.append(np.array(np.random.rand(self.n_trn_smp_dim, self.n_lyr_nodes)))
 		self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)))
+		self.prev_outs.append(np.zeros(self.n_trn_smp_dim))
+		self.weighted_sums.append(np.zeros(self.n_lyr_nodes))
 
 		# Hidden Layer(s)
 		for lyr in range(0, self.n_hidden_lyr):
 			self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_lyr_nodes)))
 			self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)))
+			self.prev_outs.append(np.zeros(self.n_lyr_nodes))
+			self.weighted_sums.append(np.zeros(self.n_lyr_nodes))
 
 		# Output Layer
 		self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_outputs)))
 		self.biases.append(np.array(np.random.rand(self.n_outputs)))
+		self.prev_outs.append(np.zeros(self.n_lyr_nodes))
+		self.weighted_sums.append(np.zeros(self.n_outputs))
 
 		self.params = []  # [(w,b),(w,b)]
 		for lyr in range(len(self.weights)):
@@ -49,16 +61,36 @@ class xor_net(object):
 
 		# Start Training
 		for iter in range(10):
-			for sample in range(self.x.shape[0]):
-				output = self.forward(self.x[sample])
-				print("Output: ")
-				print(output.shape)
-				print(output)	
-				print("Error: " )
-				err = self.error(output, self.y[sample])
-				print(err.shape)
-				print(err)	
-		
+			output = self.forward(self.x)
+			print("Output: ")
+			print(output.shape)
+			print(output)	
+			print("Labels: ")
+			print(self.y.shape)
+			print(self.y)
+			print("Error: " )
+			err = self.error(output, self.y)
+			print(err.shape)
+			print(err)	
+	
+	def activation_sigmoid (self, t):
+		""" 
+		Method that gives the response of a sigmoid to an input 
+
+		Returns:
+			Gives a floating point output of s(t), s() being the sigmoid function 
+		"""
+		return (1/(1+np.exp(-t)))
+	
+	def activation_sigmoid_d (self, t):
+		""" 
+		Method that gives the DERIVATIVE of the sigmoid 
+
+		Returns:
+			Gives a floating point output of s'(t), s() being the sigmoid function 
+		"""
+		s_t = self.activation_sigmoid(t)
+		return (s_t*(1-s_t))
 
 	def forward (self, data_x): 	
 		""" 
@@ -67,30 +99,56 @@ class xor_net(object):
 		Returns:
 			Gives a numpy.ndarray of the same size of the input. The array consists of class labels 
 		"""
+
+		# Vectorize the activation function so we can apply it to the vector
+		self.activation_sigmoid = np.vectorize(self.activation_sigmoid, otypes=[np.float])
+
 		
 		prev_lyr = data_x
 		#print("-------Input Layer--------")
 		#print(prev_lyr)
 		for lyr in range(len(self.weights)):
-			prev_lyr = np.add(np.dot(prev_lyr, self.weights[lyr]), self.biases[lyr])
+			self.prev_outs[lyr] = prev_lyr  # KEEP THIS HERE - order here is very important
+			weighted_sum = np.add(np.dot(prev_lyr, self.weights[lyr]), self.biases[lyr])
+			self.weighted_sums[lyr] = weighted_sum
+			prev_lyr = self.activation_sigmoid(weighted_sum)
+			#print("Mult: " + str(mult.shape) + " Biases: " + str(self.biases[lyr].shape) + " Prev Layer: " + str(prev_lyr.shape))
 			#print("Layer: " + str(lyr))
 			#print(prev_lyr)
 
 		return prev_lyr
 
 	def error (self, nn_output, label):
-		difference = np.subtract(label, nn_output)
-		return np.multiply(np.multiply(difference, difference), 0.5)
+		""" 
+		Method that returns the mean squared error.  
+
+		Returns:
+			Gives a scalar of the mean squared error. 
+			The error is calculated by taking the sum of 1/2 the squared difference between nn_output and label
+			error = (1/N)SUM_i(0.5(label_i - nn_output_i))
+		"""
+		difference = np.subtract(np.transpose(label), np.transpose(nn_output))
+		sqrd = np.dot(difference, np.transpose(difference))
+		err = np.multiply(sqrd, 1.0/(2.0*len(label)))
+		return err
 		
 		
 
-	def backward (self, data_y):
+	def backward (self, cur_error):
 		""" 
 		Method that performs backwards propogation of the error gradient, updating the weights 
 
 		Returns:
 			Nothing
 		"""
+		# Iterate backwards through layers
+		for lyr in range(len(self.layers)-1, -1, -1):
+			d_weightedsum_weights = self.prev_outs[lyr]
+			d_prevouts_weightedsum = self.activation_sigma_d(self.weighted_sums[lyr])
+			d_err_prevouts = cur_error #THIS NEEDS TO BE GENERALIZED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			d_err_weights = d_weightedsum_weights*d_prevouts_weightedsum*d_err_prevouts
+			self.weights[lyr] = self.weights[lyr] - np.multiply(self.lr, d_err_weights)
+			
   
 	def get_params (self):
 		""" 

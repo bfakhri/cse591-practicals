@@ -26,7 +26,8 @@ def test_xor():
 	This method will run the test on xor dataset.
 	"""
 	dg = xor() # Initialize a dataset creator
-	training_data, training_labels = dg.query_data(samples = 100)
+	training_data, training_labels = dg.query_data(samples = 8)
+	print("S: " + str(training_data.shape))
 
 	n = xor_net(training_data, training_labels)  # This call should return a net object
 	params = n.get_params()    # This call should reaturn parameters of the model that are 

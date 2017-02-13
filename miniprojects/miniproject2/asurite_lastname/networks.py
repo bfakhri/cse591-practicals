@@ -27,27 +27,37 @@ class xor_net(object):
 		print("Training w/ " + str(self.n_hidden_lyr) + " Hidden Layers")
 		print("")
 		
-		self.layers = []
+		self.weights = []
 		self.biases = []
 
 		# Input layer
-		self.layers.append(np.array(np.random.rand(self.n_trn_smp_dim*self.n_lyr_nodes)))
+		self.weights.append(np.array(np.random.rand(self.n_trn_smp_dim, self.n_lyr_nodes)))
 		self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)))
 
 		# Hidden Layer(s)
 		for lyr in range(0, self.n_hidden_lyr):
-			self.layers.append(np.array(np.random.rand(self.n_lyr_nodes*self.n_lyr_nodes)))
+			self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_lyr_nodes)))
 			self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)))
 
 		# Output Layer
-		self.layers.append(np.array(np.random.rand(self.n_lyr_nodes*self.n_outputs)))
+		self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_outputs)))
 		self.biases.append(np.array(np.random.rand(self.n_outputs)))
 
 		self.params = []  # [(w,b),(w,b)]
-		for lyr in range(len(self.layers)):
-			self.params.append((self.layers[lyr], self.biases[lyr]))
+		for lyr in range(len(self.weights)):
+			self.params.append((self.weights[lyr], self.biases[lyr]))
 
 		# Start Training
+		for iter in range(10):
+			for sample in range(self.x.shape[0]):
+				output = self.forward(self.x[sample])
+				print("Output: ")
+				print(output.shape)
+				print(output)	
+				print("Error: " )
+				err = self.error(output, self.y[sample])
+				print(err.shape)
+				print(err)	
 		
 
 	def forward (self, data_x): 	
@@ -57,10 +67,30 @@ class xor_net(object):
 		Returns:
 			Gives a numpy.ndarray of the same size of the input. The array consists of class labels 
 		"""
-		temp = np.dot(data_x, self.layers[0], self.
+		
+		prev_lyr = data_x
+		#print("-------Input Layer--------")
+		#print(prev_lyr)
+		for lyr in range(len(self.weights)):
+			prev_lyr = np.add(np.dot(prev_lyr, self.weights[lyr]), self.biases[lyr])
+			#print("Layer: " + str(lyr))
+			#print(prev_lyr)
+
+		return prev_lyr
+
+	def error (self, nn_output, label):
+		difference = np.subtract(label, nn_output)
+		return np.multiply(np.multiply(difference, difference), 0.5)
+		
 		
 
 	def backward (self, data_y):
+		""" 
+		Method that performs backwards propogation of the error gradient, updating the weights 
+
+		Returns:
+			Nothing
+		"""
   
 	def get_params (self):
 		""" 

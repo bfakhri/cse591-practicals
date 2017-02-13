@@ -31,8 +31,6 @@ def test_xor():
 	n = xor_net(training_data, training_labels)  # This call should return a net object
 	params = n.get_params()    # This call should reaturn parameters of the model that are 
 							   # fully trained.
-	print(params)
-
 	testing_data, testing_labels = dg.query_data(samples = 100)  # Create a random testing dataset.
 	predictions = n.get_predictions(testing_data) # This call should return predictions.
 
@@ -64,7 +62,8 @@ if __name__ == '__main__':
 	xor_acc = test_xor()
 	
 	# Part 2 of the project.
-	waldo_acc = test_waldo()   
+	#waldo_acc = test_waldo()   
+	waldo_acc = 0   
 
 	weight = np.random.uniform(low = 0.3, high = 0.7)
 	# This means that if you score 0.9 on random weighted average,

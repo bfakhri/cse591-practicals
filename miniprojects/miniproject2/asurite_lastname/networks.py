@@ -60,18 +60,19 @@ class xor_net(object):
 			self.params.append((self.weights[lyr], self.biases[lyr]))
 
 		# Start Training
-		for iter in range(10):
+		for iter in range(100):
 			output = self.forward(self.x)
-			print("Output: ")
-			print(output.shape)
-			print(output)	
-			print("Labels: ")
-			print(self.y.shape)
-			print(self.y)
-			print("Error: " )
+			#print("Output: ")
+			#print(output.shape)
+			#print(output)	
+			#print("Labels: ")
+			#print(self.y.shape)
+			#print(self.y)
+			#print("Error: " )
 			err = self.error(output, self.y)
-			print(err.shape)
+			#print(err.shape)
 			print(err)	
+			self.backward(err)
 	
 	def activation_sigmoid (self, t):
 		""" 
@@ -109,12 +110,13 @@ class xor_net(object):
 		#print(prev_lyr)
 		for lyr in range(len(self.weights)):
 			self.prev_outs[lyr] = prev_lyr  # KEEP THIS HERE - order here is very important
+			#print("Layer: " + str(lyr))
+			#print(prev_lyr.shape)
 			weighted_sum = np.add(np.dot(prev_lyr, self.weights[lyr]), self.biases[lyr])
 			self.weighted_sums[lyr] = weighted_sum
 			prev_lyr = self.activation_sigmoid(weighted_sum)
 			#print("Mult: " + str(mult.shape) + " Biases: " + str(self.biases[lyr].shape) + " Prev Layer: " + str(prev_lyr.shape))
 			#print("Layer: " + str(lyr))
-			#print(prev_lyr)
 
 		return prev_lyr
 
@@ -141,12 +143,20 @@ class xor_net(object):
 		Returns:
 			Nothing
 		"""
+		# Vectorize the derivative of the activation function so we can apply it to the vector
+		self.activation_sigmoid_d = np.vectorize(self.activation_sigmoid_d, otypes=[np.float])
+
 		# Iterate backwards through layers
-		for lyr in range(len(self.layers)-1, -1, -1):
+		for lyr in range(len(self.weights)-1, -1, -1):
 			d_weightedsum_weights = self.prev_outs[lyr]
-			d_prevouts_weightedsum = self.activation_sigma_d(self.weighted_sums[lyr])
+			d_prevouts_weightedsum = self.activation_sigmoid_d(self.weighted_sums[lyr])
 			d_err_prevouts = cur_error #THIS NEEDS TO BE GENERALIZED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			d_err_weights = d_weightedsum_weights*d_prevouts_weightedsum*d_err_prevouts
+			#print(d_weightedsum_weights.shape)
+			#print(d_prevouts_weightedsum.shape)
+			#print(d_err_prevouts.shape)
+			d_err_weights = np.multiply(np.dot(np.transpose(d_weightedsum_weights), d_prevouts_weightedsum), d_err_prevouts)
+			#print(self.weights[lyr].shape)
+			#print(d_err_weights.shape)
 			self.weights[lyr] = self.weights[lyr] - np.multiply(self.lr, d_err_weights)
 			
   

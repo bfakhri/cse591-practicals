@@ -14,6 +14,11 @@ class xor_net(object):
 						  
 	"""
 	def __init__(self, data, labels):
+		# Vectorize the activation function so we can apply it to the vector
+		self.activation_sigmoid = np.vectorize(self.activation_sigmoid, otypes=[np.float])
+		# Vectorize the derivative of the activation function so we can apply it to the vector
+		self.activation_sigmoid_d = np.vectorize(self.activation_sigmoid_d, otypes=[np.float])
+
 		self.x = data
 		self.y = labels
 		self.n_trn_smp = data.shape[0]	
@@ -30,28 +35,28 @@ class xor_net(object):
 		# NN Params
 		self.weights = []
 		self.biases = []
-		self.lr = 0.05
+		self.lr = 0.001
 
 		# Saved states for backprop
 		self.prev_outs = []
 		self.weighted_sums = []
 
 		# Input layer
-		self.weights.append(np.array(np.random.rand(self.n_trn_smp_dim, self.n_lyr_nodes)))
-		self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)))
+		self.weights.append(np.array(np.random.rand(self.n_trn_smp_dim, self.n_lyr_nodes)*2-1.0))
+		self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)*2-1.0))
 		self.prev_outs.append(np.zeros(self.n_trn_smp_dim))
 		self.weighted_sums.append(np.zeros(self.n_lyr_nodes))
 
 		# Hidden Layer(s)
 		for lyr in range(0, self.n_hidden_lyr):
-			self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_lyr_nodes)))
-			self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)))
+			self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_lyr_nodes)*2-1.0))
+			self.biases.append(np.array(np.random.rand(self.n_lyr_nodes)*2-1.0))
 			self.prev_outs.append(np.zeros(self.n_lyr_nodes))
 			self.weighted_sums.append(np.zeros(self.n_lyr_nodes))
 
 		# Output Layer
-		self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_outputs)))
-		self.biases.append(np.array(np.random.rand(self.n_outputs)))
+		self.weights.append(np.array(np.random.rand(self.n_lyr_nodes, self.n_outputs)*2-1.0))
+		self.biases.append(np.array(np.random.rand(self.n_outputs)*2-1.0))
 		self.prev_outs.append(np.zeros(self.n_lyr_nodes))
 		self.weighted_sums.append(np.zeros(self.n_outputs))
 
@@ -60,19 +65,20 @@ class xor_net(object):
 			self.params.append((self.weights[lyr], self.biases[lyr]))
 
 		# Start Training
-		for iter in range(100):
-			output = self.forward(self.x)
-			#print("Output: ")
-			#print(output.shape)
-			#print(output)	
-			#print("Labels: ")
-			#print(self.y.shape)
-			#print(self.y)
-			#print("Error: " )
-			err = self.error(output, self.y)
-			#print(err.shape)
-			print(err)	
-			self.backward(err)
+		for iter in range(1000):
+			for sample in range(len(self.x)):
+				output = self.forward(self.x[sample])
+				#print("Output: ")
+				#print(output.shape)
+				print(output)	
+				#print("Labels: ")
+				#print(self.y.shape)
+				#print(self.y)
+				#print("Error: " )
+				err = self.error(output, self.y)
+				#print(err.shape)
+				#print(err)	
+				self.backward(err)
 	
 	def activation_sigmoid (self, t):
 		""" 
@@ -101,9 +107,6 @@ class xor_net(object):
 			Gives a numpy.ndarray of the same size of the input. The array consists of class labels 
 		"""
 
-		# Vectorize the activation function so we can apply it to the vector
-		self.activation_sigmoid = np.vectorize(self.activation_sigmoid, otypes=[np.float])
-
 		
 		prev_lyr = data_x
 		#print("-------Input Layer--------")
@@ -114,7 +117,11 @@ class xor_net(object):
 			#print(prev_lyr.shape)
 			weighted_sum = np.add(np.dot(prev_lyr, self.weights[lyr]), self.biases[lyr])
 			self.weighted_sums[lyr] = weighted_sum
-			prev_lyr = self.activation_sigmoid(weighted_sum)
+			if(lyr == (len(self.weights) - 1)):
+				prev_lyr = weighted_sum
+			else:
+				prev_lyr = self.activation_sigmoid(weighted_sum)
+				
 			#print("Mult: " + str(mult.shape) + " Biases: " + str(self.biases[lyr].shape) + " Prev Layer: " + str(prev_lyr.shape))
 			#print("Layer: " + str(lyr))
 
@@ -143,8 +150,6 @@ class xor_net(object):
 		Returns:
 			Nothing
 		"""
-		# Vectorize the derivative of the activation function so we can apply it to the vector
-		self.activation_sigmoid_d = np.vectorize(self.activation_sigmoid_d, otypes=[np.float])
 
 		# Iterate backwards through layers
 		for lyr in range(len(self.weights)-1, -1, -1):
@@ -187,8 +192,20 @@ class xor_net(object):
 		Notes:
 			Temporarily returns random numpy array for demonstration purposes.							  
 		"""		   
+		#og = np.random.randint(low =0, high = 2, size = x.shape[0])
+		#print("OG Shape: ")
+		#print(og.shape)
 		# Here is where you write a code to evaluate the data and produce predictions.
-		return np.random.randint(low =0, high = 2, size = x.shape[0])
+		predictions = self.forward(x).flatten()
+		predictions_bin = np.array(np.zeros(len(predictions)))
+		for p in range(len(predictions)):
+			if(predictions[p] > 0.5):
+				predictions_bin[p] = 1
+			else:
+				predictions_bin[p] = 0
+		#print("Prediction Shape: ")
+		#print(predictions.shape)
+		return predictions_bin
 
 class mlnn(xor_net):
 	"""

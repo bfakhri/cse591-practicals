@@ -1,14 +1,6 @@
 
 
-
-
 \documentclass[conference,compsoc]{IEEEtran}
-
-
-
-
-
-
 
 
 
@@ -73,7 +65,7 @@ Email: bfakhri@asu.edu}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Hyperparameter tuning is an important aspect of deep learning (or any machine learning in general). The goal of Mini Project 3 is to become familiar with the Theano toolbox Yann by tuning the hyperparameters of the Yann MLNN tutorial. Hyperparameters were heuristically ordered from greatest to least impactful (in terms of their impact on error rate). The error rate of the tuned network was 98.47\%.
+Hyperparameter tuning is an important aspect of deep learning (or any machine learning in general). The goal of Mini Project 3 is to become familiar with the Theano toolbox Yann by tuning the hyperparameters of the Yann MLNN tutorial. Hyperparameters were heuristically ordered from greatest to least impactful (in terms of their impact on error rate). The error rate of my tuned network was 98.53\%.
 \end{abstract}
 
 
@@ -98,7 +90,7 @@ The parameters in question were regularization, optimization technique, momentum
   \end{tabular}
 \end{center}
 
- After succesfully installing Yann, the tutorial was run using the default values. The default values gave very good results at \textbf{98.43\%}. The network was then purged of tuned hyperparameters, making the network as simple as possible, creating a good baseline to work with. Training/testing the clean network resulted in an accuracy of \textbf{97.98\%}. This became the baseline. A table of the state of this network is below. 
+ After succesfully installing Yann, the tutorial was run using the default values. The default values gave very good results at \textbf{98.39\%}. The network was then purged of tuned hyperparameters, making the network as simple as possible, creating a good baseline to work with. Training/testing the clean network resulted in an accuracy of \textbf{97.98\%}. This became the baseline. A table of the state of this network is below. 
  
  \renewcommand{\arraystretch}{1.1}
  \begin{center}
@@ -115,55 +107,25 @@ The parameters in question were regularization, optimization technique, momentum
 
 \section{Tuning}
 %
-Based on intuition, I ranked the hyperparameters in order of what I though would have the largest effect.
-\textit{Regularization} \textit{Optimization} \textit{Momentum} \textit{LearningRate}. Begining with regularization, turning it on and with the default parameters (0.001, 0.001), accuracy was affected very slightly negatively (textbf{97.97\%}). Raising the L2 coefficient to 0.002 raised accuracy to textbf{98.18\%}. Deciding to keep this, I moved onto \textit{Optimization}. Changing it to textit{Adagrad} had the negative effect of reducing accuracy to \textbf{98.11\%}. No further exploration of optimization technique was deemed necessary. 
-
-% use section* for acknowledgment
-\ifCLASSOPTIONcompsoc
-  % The Computer Society usually uses the plural form
-  \section*{Acknowledgments}
-\else
-  % regular IEEE prefers the singular form
-  \section*{Acknowledgment}
-\fi
-
-
-The authors would like to thank...
-
-
+Based on intuition, I ranked the hyperparameters in order of what I though would have the largest effect:
+\textit{Regularization, Optimization, Momentum, LearningRate}. Begining with regularization, turning it on and with the default parameters (0.001, 0.001), accuracy was affected very slightly negatively to \textbf{97.97\%}. Raising the L1 and L2 coefficient to 0.01 and 0.02 raised accuracy to \textbf{98.18\%}. Deciding to keep this, I moved onto \textit{Optimization}. Changing it to textit{Adagrad} had the negative effect of reducing accuracy to \textbf{98.11\%}. No further exploration of optimization technique was deemed necessary. Next hyperparameter to tune was \textit{Momentum}. Adding \textit{Momentum} with values (0.5, 0.95, 30) resulted in poor gains. Raising the startVal to 0.9 ((0.9, 0.95, 30) resulted in the greatest improvement in accuracy: Polyak \textit{Momentum} resulted in an accuracy of \textbf{98.53\%}. Trying Nesterov \textit{Momentum} gave comparable but less stable (changed each iteration) results. For this reason, Polyak was chosen going forward. Unfortunately, with \textit{LearningRate}, deviating from the default values of (0.1,0.001,0.005) only resulted in a reduction in accuracy. The final state of the network (best local minima) is listed below: 
+\\
+ \renewcommand{\arraystretch}{1.1}
+ \begin{center}
+   \begin{tabular}{ | c | c | c | }
+     \hline
+     \textbf{Hyperparameter} & \textbf{Options} & \textbf{Values} \\ \hline
+     Regularization & ON & (0.01, 0.02) \\ \hline
+     Optimization & RMSProp & -- \\ \hline
+     Momentum &  Polyak &  (0.9, 0.95, 30)-- \\ \hline
+     Learning Rate & -- & (0.05, 0.01, 0.001)  \\ \hline
+   \end{tabular}
+ \end{center}
 
 
-
-% trigger a \newpage just before the given reference
-% number - used to balance the columns on the last page
-% adjust value as needed - may need to be readjusted if
-% the document is modified later
-%\IEEEtriggeratref{8}
-% The "triggered" command can be changed if desired:
-%\IEEEtriggercmd{\enlargethispage{-5in}}
-
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-%\bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
+\section{Conclusion}
 %
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
-\begin{thebibliography}{1}
-
-\bibitem{IEEEhowto:kopka}
-H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
-  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-\end{thebibliography}
-
+In conclusion, the hyperparameters on the Yann MLNN tutorial were highly tuned from the start: the error rate of the tuned network was \textbf{98.39\%}. Because of this, there was not a lot of room for improvement. Starting from a more reasonable baseline (stripping the network of tuned parameters to learn the tuning manually) resulted in a tuning gain of \textbf{98.53\%} - \textbf{97.98\%} = \textbf{0.55 \%}. 
 
 
 

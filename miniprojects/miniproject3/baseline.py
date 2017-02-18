@@ -30,8 +30,8 @@ net.add_layer ( type = "objective",
                 )
 
 optimizer_params =  {
-            "momentum_type"       : 'false',
-            #"momentum_params"     : (0.9, 0.95, 30),
+            "momentum_type"       : 'polyak',
+            "momentum_params"     : (0.5, 0.95, 30),
             #"regularization"      : (0.0001, 0.0002),
             "optimizer_type"      : 'rmsprop',
             "id"                  : 'polyak-rms'

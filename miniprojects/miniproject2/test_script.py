@@ -1,6 +1,6 @@
 # will ``sample_submission`` to your submission filename.
 
-from asurite_lastname.networks import xor_net, mlnn
+from bfakhri_fakhri.networks import xor_net, mlnn
 from dataset import xor, waldo
 import numpy as np
 
@@ -63,8 +63,8 @@ if __name__ == '__main__':
 	xor_acc = test_xor()
 	
 	# Part 2 of the project.
-	#waldo_acc = test_waldo()   
-	waldo_acc = 0   
+	waldo_acc = test_waldo()   
+	#waldo_acc = 0   
 
 	weight = np.random.uniform(low = 0.3, high = 0.7)
 	# This means that if you score 0.9 on random weighted average,

@@ -1,8 +1,8 @@
-#import os
-#os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu"
-#import theano
-#print("Theano Default Device: ")
-#print(theano.config.device)
+import os
+os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu"
+import theano
+print("Theano Default Device: ")
+print(theano.config.device)
 
 from yann.network import network
 net = network()
@@ -13,14 +13,14 @@ net.add_layer (type = "dot_product",
                origin ="input",
                id = "dot_product_1",
                num_neurons = 800,
-               regularize = True,
+               regularize = False,
                activation ='relu')
 
 net.add_layer (type = "dot_product",
                origin ="dot_product_1",
                id = "dot_product_2",
                num_neurons = 800,
-               regularize = True,
+               regularize = False,
                activation ='relu')
 
 net.add_layer ( type = "classifier",
@@ -36,14 +36,8 @@ net.add_layer ( type = "objective",
                 )
 
 optimizer_params =  {
-            #"momentum_type"       : 'nesterov',
-            "momentum_type"       : 'polyak',
-            #"momentum_params"     : (0.9, 0.95, 25),
-            "momentum_params"     : (0.9, 0.95, 30),
-            #"regularization"      : (0.1, 0.2),
-            "regularization"      : (0.01, 0.02),
+            "momentum_type"       : 'false',
             "optimizer_type"      : 'rmsprop',
-            #"optimizer_type"      : 'adagrad',
             "id"                  : 'bij'
                     }
 net.add_module ( type = 'optimizer', params = optimizer_params )

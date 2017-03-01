@@ -18,10 +18,9 @@ net.add_layer ( type = "conv_pool",
                 origin = "input",
                 id = "conv_pool_1",
                 num_neurons = 64,
-                filter_size = (10,10),
+                filter_size = (15,15),
                 pool_size = (3,3),
                 activation = ('maxout', 'maxout', 2),
-                #activation = 'relu',
                 batch_norm = True,
                 regularize = True,
                 verbose = True
@@ -59,7 +58,7 @@ optimizer_params =  {
             #"regularization"      : (0.1, 0.2),
             #"regularization"      : (0.3, 0.4),
             #"regularization"      : (0.001, 0.002),
-            "regularization"      : (0.01, 0.02),
+            "regularization"      : (0.01, 0.2),
             "optimizer_type"      : 'rmsprop',
             #"optimizer_type"      : 'adagrad',
             "id"                  : 'bij'
@@ -68,7 +67,7 @@ net.add_module ( type = 'optimizer', params = optimizer_params )
 
 
 #learning_rates = (0.05, 0.01, 0.001)
-learning_rates = (0.05, 0.007, 0.003)
+learning_rates = (0.05, 0.007, 0.001)
 
 net.cook( optimizer = 'bij',
           objective_layer = 'nll',

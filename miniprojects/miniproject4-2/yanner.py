@@ -1,6 +1,7 @@
 import os
 #os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, lib.cnmem=0.75, floatX=float32, mode=DebugMode,DebugMode.check_py=False"
 os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, lib.cnmem=0.75, floatX=float32"
+#os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, floatX=float32"
 import theano
 print("Theano Default Device: ")
 print(theano.config.device)
@@ -67,7 +68,7 @@ optimizer_params =  {
             #"momentum_type"       : 'nesterov',
             "momentum_type"       : 'polyak',
             #"momentum_params"     : (0.9, 0.95, 25),
-            "momentum_params"     : (0.9, 0.95, 30),
+            "momentum_params"     : (0.9, 0.95, 20),
             #"regularization"      : (0.1, 0.2),
             "regularization"      : (0.001, 0.002),
             "optimizer_type"      : 'rmsprop',
@@ -78,7 +79,7 @@ net.add_module ( type = 'optimizer', params = optimizer_params )
 
 
 #learning_rates = (0.05, 0.01, 0.001)
-learning_rates = (0.05, 0.005, 0.001)
+learning_rates = (0.05, 0.0005, 0.00001)
 
 net.cook( optimizer = 'bij',
           objective_layer = 'nll',
@@ -86,7 +87,7 @@ net.cook( optimizer = 'bij',
           classifier = 'softmax',
           )
 
-net.train( epochs = (20, 20),
+net.train( epochs = (10, 20),
            validate_after_epochs = 2,
            training_accuracy = True,
            learning_rates = learning_rates,

@@ -1,6 +1,6 @@
 import os
 #os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, lib.cnmem=0.75, floatX=float32, mode=DebugMode,DebugMode.check_py=False"
-os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, lib.cnmem=0.75, floatX=float32"
+os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, lib.cnmem=0.275, floatX=float32"
 #os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, floatX=float32"
 import theano
 print("Theano Default Device: ")
@@ -19,7 +19,7 @@ net.add_layer ( type = "conv_pool",
                 id = "conv_pool_1",
                 num_neurons = 64,
                 filter_size = (3,3),
-                pool_size = (2,2),
+                pool_size = (1,1),
                 activation = ('maxout', 'maxout', 2),
                 #activation = 'relu',
                 batch_norm = True,
@@ -39,17 +39,29 @@ net.add_layer ( type = "conv_pool",
                 verbose = True 
             )
 
+net.add_layer ( type = "conv_pool",
+                origin = "conv_pool_2",
+                id = "conv_pool_3",
+                num_neurons = 64,
+                filter_size = (3,3),
+                pool_size = (2,2),
+                activation = ('maxout', 'maxout', 2),
+                batch_norm = True,
+                regularize = True,
+                verbose = True 
+            )
+
 net.add_layer (type = "dot_product",
-               origin ="conv_pool_2",
+               origin ="conv_pool_3",
                id = "dot_product_1",
-               num_neurons = 800,
+               num_neurons = 512,
                regularize = True,
                activation ='relu')
 
 net.add_layer (type = "dot_product",
                origin ="dot_product_1",
                id = "dot_product_2",
-               num_neurons = 100,
+               num_neurons = 128,
                regularize = True,
                activation ='relu')
 

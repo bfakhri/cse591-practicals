@@ -100,7 +100,7 @@ net.cook( optimizer = 'bij',
           classifier = 'softmax',
           )
 
-net.train( epochs = (20, 8),
+net.train( epochs = (8, 3),
            validate_after_epochs = 1,
            training_accuracy = True,
            learning_rates = learning_rates,

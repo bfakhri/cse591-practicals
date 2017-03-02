@@ -67,7 +67,7 @@ net.add_module ( type = 'optimizer', params = optimizer_params )
 
 
 #learning_rates = (0.05, 0.01, 0.001)
-learning_rates = (0.05, 0.007, 0.001)
+learning_rates = (0.05, 0.007, 0.00001)
 
 net.cook( optimizer = 'bij',
           objective_layer = 'nll',
@@ -75,7 +75,7 @@ net.cook( optimizer = 'bij',
           classifier = 'softmax',
           )
 
-net.train( epochs = (8, 3),
+net.train( epochs = (8, 8),
            validate_after_epochs = 1,
            training_accuracy = True,
            learning_rates = learning_rates,

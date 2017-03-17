@@ -38,6 +38,7 @@
 
 
 \usepackage{tikz}
+\usepackage{graphicx}
 \usetikzlibrary{shapes.geometric, arrows}
 \tikzstyle{line}=[draw] % here
 % correct bad hyphenation here
@@ -65,7 +66,7 @@ Email: bfakhri@asu.edu}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Comparing the filters after training a convolutional neural network (CNN) on several different datasets, it becomes evident that there exists some level of redundancy between the filters trained using different datasets. We can devise that because similar filters arise from training with different datasets, similar features exists in both datasets. This phenomena is called dataset generality. The purpose of this project is to illustrate this idea by training a CNN on one dataset, and testing it on another (after retraining the softmax layer). 
+Comparing the filters after training a convolutional neural network (CNN) on several different datasets, it becomes evident that there exists some level of redundancy between the filters trained using different datasets. Because of this, we can devise that similar features exists in both datasets. This phenomena is called dataset generality. The purpose of this project is to measure this phenomena. 
 \end{abstract}
 
 
@@ -76,21 +77,46 @@ Comparing the filters after training a convolutional neural network (CNN) on sev
 
 \section{Introduction}
 % no \IEEEPARstart
-Hello $\Psi$ hellow.
+Dataset generality can be leveraged to pretrain CNNs to save time training on new datasets. The usefulness of a dataset for such a task is, of course, related to the generality of the dataset. Relative dataset generality can be measured, as explained in \cite{DBLP:journals/corr/VenkatesanGL16}. The notation 
+\begin{equation}
+\Psi(D_j|r)
+\end{equation}
+describes the performance of a network trained on dataset $D_j$ and initialized with random weights. 
+
 
  
 
 
-\section{Designing the Network}
+\section{Methodology}
+To measure the generalities, we prejudiced a network using one dataset, and retrained solely the softmax layer on other another dataset
 
+\section{Results}
 
-
-
+\includegraphics[scale=0.5]{orig}
+\includegraphics[scale=0.5]{rot}
+\includegraphics[scale=0.5]{noisy}
 \section{Conclusion}
 %
+Reiterate meaning of results (quickly)
+
+\nocite{*}
+\bibliography{ragav}
+%\bibliographystyle{IEEE}
+\bibliographystyle{IEEEtran}
+
+%\begin{thebibliography}{1}
 
 
+%\bibitem{}
+%REDO THIS 
 
+%\bibitem{}
+%H.~Kopka and P.~W. Daly, \emph{A Guide to \LaTeX}, 3rd~ed.\hskip 1em plus
+%  0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
+  
+
+
+%\end{thebibliography}
 
 % that's all folks
 \end{document}

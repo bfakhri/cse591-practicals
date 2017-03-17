@@ -26,48 +26,67 @@ net.add_layer(  type = "input",
 		id ="input", 
 		dataset_init_args = dataset_params)
 
+
 net.add_layer ( type = "conv_pool",
-		id = 'conv_pool_1',
+                origin = "input",
+                id = "conv_pool_1",
+                num_neurons = 20,
+                filter_size = (5,5),
+                pool_size = (2,2),
+                activation = ('maxout', 'maxout', 2),
+                batch_norm = True,
+                regularize = True,
+                verbose = True,
                 init_params = old_params['conv_pool_1'],
 		learnable = False)
 
 net.add_layer ( type = "conv_pool",
+                origin = "conv_pool_1",
                 id = "conv_pool_2",
+                num_neurons = 50,
+                filter_size = (3,3),
+                pool_size = (2,2),
+                activation = ('maxout', 'maxout', 2),
+                batch_norm = True,
+                regularize = True,
+                verbose = True,
                 init_params = old_params['conv_pool_2'],
 		learnable = False)
 
 net.add_layer ( type = "dot_product",
+		origin ="conv_pool_2",
 		id = "dot_product_1",
+		num_neurons = 800,
+		regularize = True,
+		activation ='relu',
+		dropout_rate=0.5,
                 init_params = old_params['dot_product_1'],
 		learnable = False)
 
 net.add_layer ( type = "dot_product",
+		origin ="dot_product_1",
 		id = "dot_product_2",
+		num_neurons = 800,
+		regularize = True,
+		activation ='relu',
+		dropout_rate=0.5, 
                 init_params = old_params['dot_product_2'],
 		learnable = False)
 
 
 net.add_layer ( type = "classifier",
                 id = "softmax",
+                origin = "dot_product_2",
                 num_classes = 10,
-		init_params = old_params['softmax'])
-
-#net.add_layer ( type = "classifier",
-#                id = "softmax",
-#                origin = "dot_product_2",
-#                num_classes = 10,
-#                activation = 'softmax',
-#		learnable = True)
+                activation = 'softmax',
+		#init_params = old_params['softmax'],
+		learnable = True)
 
 net.add_layer ( type = "objective",
                 id = "nll",
-		init_params = old_params['nll']
+                origin = "softmax",
                 )
 
-#net.add_layer ( type = "objective",
-#                id = "nll",
-#                origin = "softmax",
-#                )
 
 optimizer_params =  {
             "momentum_type"       : 'nesterov',

@@ -1,7 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 import os
-os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, floatX=float32"
+#os.environ['THEANO_FLAGS'] = "force_device=True, device=gpu, floatX=float32"
 import theano
 print("Theano Default Device: ")
 print(theano.config.device)
@@ -86,7 +86,7 @@ net.cook( optimizer = 'bij',
           classifier = 'softmax',
           )
 
-net.train( epochs = (8, 8),
+net.train( epochs = (4, 2),
            validate_after_epochs = 1,
            training_accuracy = True,
            learning_rates = learning_rates,

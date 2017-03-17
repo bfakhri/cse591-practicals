@@ -1,0 +1,98 @@
+\documentclass[conference,compsoc]{IEEEtran}
+
+
+
+% *** CITATION PACKAGES ***
+%
+\ifCLASSOPTIONcompsoc
+  % IEEE Computer Society needs nocompress option
+  % requires cite.sty v4.0 or later (November 2003)
+  \usepackage[nocompress]{cite}
+\else
+  % normal IEEE
+  \usepackage{cite}
+\fi
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+\ifCLASSINFOpdf
+  % \usepackage[pdftex]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../pdf/}{../jpeg/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.pdf,.jpeg,.png}
+\else
+  % or other class option (dvipsone, dvipdf, if not using dvips). graphicx
+  % will default to the driver specified in the system graphics.cfg if no
+  % driver is specified.
+  % \usepackage[dvips]{graphicx}
+  % declare the path(s) where your graphic files are
+  % \graphicspath{{../eps/}}
+  % and their extensions so you won't have to specify these with
+  % every instance of \includegraphics
+  % \DeclareGraphicsExtensions{.eps}
+\fi
+
+
+
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{line}=[draw] % here
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+
+\begin{document}
+%
+% paper title
+\title{CSE 591 - Introduction to Deep Learning\\Mini Project 5}
+
+
+% author names and affiliations
+% use a multiple column layout for up to three different
+% affiliations
+\author{\IEEEauthorblockN{Bijan Fakhri}
+\IEEEauthorblockA{School of Computing, Informatics and\\Decision Systems Engineering\\
+Arizona State University\\
+Tempe, Arizona 85044\\
+Email: bfakhri@asu.edu}}
+
+% make the title area
+\maketitle
+
+% As a general rule, do not put math, special symbols or citations
+% in the abstract
+\begin{abstract}
+Comparing the filters after training a convolutional neural network (CNN) on several different datasets, it becomes evident that there exists some level of redundancy between the filters trained using different datasets. We can devise that because similar filters arise from training with different datasets, similar features exists in both datasets. This phenomena is called dataset generality. The purpose of this project is to illustrate this idea by training a CNN on one dataset, and testing it on another (after retraining the softmax layer). 
+\end{abstract}
+
+
+
+\IEEEpeerreviewmaketitle
+
+
+
+\section{Introduction}
+% no \IEEEPARstart
+Hello $\Psi$ hellow.
+
+ 
+
+
+\section{Designing the Network}
+
+
+
+
+\section{Conclusion}
+%
+
+
+
+
+% that's all folks
+\end{document}
+
+

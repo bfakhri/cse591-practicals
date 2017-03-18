@@ -66,13 +66,11 @@ Email: bfakhri@asu.edu}}
 % As a general rule, do not put math, special symbols or citations
 % in the abstract
 \begin{abstract}
-Comparing the filters after training a convolutional neural network (CNN) on several different datasets, it becomes evident that there exists some level of redundancy between the filters trained using different datasets. Because of this, we can devise that similar features exists in both datasets. This phenomena is called dataset generality. The purpose of this project is to measure this phenomena. 
+%There exists a level of redundancy between filters trained using different datasets. Because of this, we can devise that similar features exists in both datasets. This phenomena is called dataset generality. The purpose of this project is to measure this phenomena. The experiments show that a rotated version of the dataset is the most general. 
+Comparing the filters after training a convolutional neural network (CNN) on several different datasets, it becomes evident that there exists some level of redundancy between the filters trained using different datasets. Because of this, we can devise that similar features exists in both datasets. This phenomena is called dataset generality. The purpose of this project is to measure this phenomena. The experiments show that a rotated version of the dataset is the most general. 
 \end{abstract}
 
-
-
 \IEEEpeerreviewmaketitle
-
 
 
 \section{Introduction}
@@ -82,22 +80,39 @@ Dataset generality can be leveraged to pretrain CNNs to save time training on ne
 \Psi(D_j|r)
 \end{equation}
 describes the performance of a network trained on dataset $D_j$ and initialized with random weights. 
-
-
- 
+\begin{equation}
+g(D_i, D_j) = \frac{\Psi(D_j|D_i)}{\Psi(D_j|r)}
+\end{equation}
+Equation 2 describes the generality metric. It shows the generality of dataset $D_i$ with respect to dataset $D_j$. 
 
 
 \section{Methodology}
-To measure the generalities, we prejudiced a network using one dataset, and retrained solely the softmax layer on other another dataset
+Three datasets were tested in these experiments, all derivatives of the MNIST handwritten digit dataset. Below are YANN visualizer outputs of the three datasets. 
+\includegraphics[scale=0.65]{orig}
+\includegraphics[scale=0.65]{rot}
+\includegraphics[scale=0.65]{noisy}
+From left to right, the datasets above are: the original MNIST dataset, a rotated MNIST dataset, and a noisy MNIST dataset. To measure the generalities, we prejudiced a network using one dataset, recorded its performance, then retrained the softmax layer of that network on another dataset. The generalization performance was then calculated using equation 2. This was done on all possible combinations of the three datasets. 
 
 \section{Results}
+The results of the experiments are tabulated below. The dataset in the left column corresponding to a cell in the tabel represents the dataset on which the CNN was prejudiced with. The dataset in the top row corresponding to a cell represents the dataset the CNN was tested on (after training the softmax layer). 
+ \renewcommand{\arraystretch}{1.2}
+ \begin{center}
+   \begin{tabular}{ | c || c | c | c | }
+     \hline 
+     \textbf{MNIST Dataset} & \textbf{Original} & \textbf{Rotated} & \textbf{Noisy} \\ \hline
+     \hline
+     \textbf{Original} & 1.00 & 0.27 & 0.39 \\ \hline
+     \textbf{Rotated} & 0.32 & 1.00 & 0.43 \\ \hline
+     \textbf{Noisy}  & 0.39 & 0.28 & 1.00 \\ \hline
+   \end{tabular}
+ \end{center}
+ 
+From the results it is evident that the rotated version of the MNIST dataset is the most general, sporting an average generality of 0.58, slightly higher than the original and noisy datasets (both at 0.56). Interestingly, the generality of the rotated dataset with respect to the noisy dataset topped the charts at 0.43. 
 
-\includegraphics[scale=0.5]{orig}
-\includegraphics[scale=0.5]{rot}
-\includegraphics[scale=0.5]{noisy}
-\section{Conclusion}
+
+\section{Conclusion and Discussion}
 %
-Reiterate meaning of results (quickly)
+The results unveiled interesting patterns in the generality of the datasets. The generalities with respect to the rotated dataset are interesting because they are the lowest (at 0.27 and 0.28). This could be because the atomic structures learned by the CNN are not rotation invariant. This could explain why the rotated dataset is the most general - prejudicing with it produces rotation invarient filters. It is also interesting to note that the noisy dataset is equally as general as the original. This is not initially expected because noise could act as a regularizer, but, because the CNN is using dropout, it is likely redundant, handing the rotated dataset the crown. 
 
 \nocite{*}
 \bibliography{ragav}

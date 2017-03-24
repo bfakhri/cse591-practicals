@@ -194,10 +194,18 @@ def convolutional_autoencoder ( dataset= None, verbose = 1 ):
                     mean_subtract = True )
     
     # add an input layer 
-    net.add_layer (	type = "random",
-			id = "random_1",
-			verbose = verbose,
-			num_neurons = 28)
+    #net.add_layer (	type = "random",
+	#		id = "random_1",
+	#		verbose = verbose,
+	#		num_neurons = (28, 28))
+    
+    net.add_layer(type = 'random',
+                        id = 'random_1',
+                        num_neurons = (28,28), 
+                        distribution = 'normal',
+                        mu = 0,
+                        sigma = 1,
+                        verbose = verbose)
 
     net.add_layer ( type = "merge",
 			id = "merge_1",
